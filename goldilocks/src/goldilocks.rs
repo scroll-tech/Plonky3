@@ -404,6 +404,14 @@ impl TwoAdicField for Goldilocks {
     }
 }
 
+impl Goldilocks {
+    #[allow(unused)]
+    pub const fn two_adic_generator_const(bits: usize) -> Self {
+        assert!(bits <= Self::TWO_ADICITY);
+        Self::TWO_ADIC_GENERATORS[bits]
+    }
+}
+
 impl Add for Goldilocks {
     type Output = Self;
 
@@ -646,4 +654,16 @@ mod tests {
         crate::Goldilocks,
         p3_dft::Radix2DitParallel<crate::Goldilocks>
     );
+
+    #[test]
+    fn test_two_adic_generator_consistency() {
+        let log_n = F::TWO_ADICITY;
+        let g = F::two_adic_generator(log_n);
+        for bits in 0..=log_n {
+            assert_eq!(
+                g.exp_power_of_2(bits),
+                F::two_adic_generator_const(log_n - bits)
+            );
+        }
+    }
 }

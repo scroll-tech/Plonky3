@@ -32,10 +32,24 @@ impl HasTwoAdicBinomialExtension<2> for Goldilocks {
     }
 }
 
+impl Goldilocks {
+    #[allow(unused)]
+    pub const fn ext_two_adic_generator_const(bits: usize) -> [Self; 2] {
+        assert!(bits <= 33);
+
+        if bits == 33 {
+            [Self::ZERO, Self::new(15659105665374529263)]
+        } else {
+            [Self::TWO_ADIC_GENERATORS[bits], Self::ZERO]
+        }
+    }
+}
+
 #[cfg(test)]
 mod test_quadratic_extension {
 
     use p3_field::extension::BinomialExtensionField;
+    use p3_field::TwoAdicField;
     use p3_field_testing::{test_field, test_two_adic_extension_field};
 
     use crate::Goldilocks;
@@ -46,4 +60,12 @@ mod test_quadratic_extension {
     test_field!(super::EF);
 
     test_two_adic_extension_field!(super::F, super::EF);
+
+    #[test]
+    fn test_ef_two_adic_generator_consistency() {
+        assert_eq!(
+            Into::<EF>::into(F::two_adic_generator(F::TWO_ADICITY)),
+            EF::two_adic_generator(F::TWO_ADICITY)
+        );
+    }
 }
