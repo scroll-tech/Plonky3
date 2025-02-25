@@ -40,6 +40,13 @@ impl<F, A, const D: usize> BinomialExtensionField<F, D, A> {
             _phantom: PhantomData,
         }
     }
+
+    pub const fn new_unchecked(value: [A; D]) -> Self {
+        Self {
+            value,
+            _phantom: PhantomData,
+        }
+    }
 }
 
 impl<F: Field, A: Algebra<F>, const D: usize> Default for BinomialExtensionField<F, D, A> {
